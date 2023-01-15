@@ -4,13 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using static CourseraSystemExam.Services;
 
 namespace CourseraSystemExam
 {
     internal class Program
     {
-        public static IConfiguration? iConfiguration;
         public static Services Services;
         public static CourseraContext courseraDbContext;
 
@@ -20,19 +20,28 @@ namespace CourseraSystemExam
 
             // TODO:
 
-            //var minCredit = Console.ReadLine();
-            //var startDateCredit = Console.ReadLine();
-            //var endDateCredit = Console.ReadLine();
-            //var pathToSaveReports = Console.ReadLine();
+            Console.WriteLine("Please enter the minimum credit for course...    e.g. 30");
+            var minCredit = 0;
+            int.TryParse(Console.ReadLine(), out minCredit);
 
-            ShowCourseraReport();
+            Console.WriteLine("Please enter the start date for a course...    e.g. 2019/08/20");
+            var startDateCredit = DateTime.MinValue;
+            DateTime.TryParse(Console.ReadLine(), out startDateCredit);
 
-            Console.WriteLine("Hello, World!");
+            Console.WriteLine("Please enter the end date for a course...   e.g. 2019/08/20");
+            var endDateCredit = DateTime.MinValue;
+            DateTime.TryParse(Console.ReadLine(), out endDateCredit);
+
+            Console.WriteLine("Please enter the path to save the reports...");
+            var pathToSaveReports = Console.ReadLine();
+
+            GenerateCourseraReport(minCredit, startDateCredit,endDateCredit, pathToSaveReports);
+
             Console.ReadLine();
         }
 
 
-        static async Task ShowCourseraReport()
+        static async Task GenerateCourseraReport(int minCredit, DateTime startDateCredit, DateTime endDateCredit, string pathToSaveReports)
         {
             //var res = await Services.GetAllStudents<StudentViewModel>();
             //var res = await Services.GetAllInstructors<InstructorViewModel>();
@@ -40,11 +49,23 @@ namespace CourseraSystemExam
             
             var res = await Services.GetAllCoursesStudentsRelations<StudentsCoursesModel>();
 
-            // the time wasn't enough for me but i have all the data that's needed for the CSV and HTML files in the res variable
+            var output = res.Where(x => x.Course.Credit >= minCredit || (x.CompletionDate >= startDateCredit && x.CompletionDate <= endDateCredit)).OrderBy(x=>x.StudentPinNavigation.FirstName);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            foreach (var item in output)
+            {
+                Console.WriteLine($"Student name : {item.StudentPinNavigation.FirstName} {item.StudentPinNavigation.LastName}");
+                Console.WriteLine($"Course name : {item.Course.Name} with {item.Course.Credit} credits completed on {item.CompletionDate?.ToString("d")}");
+                Console.WriteLine($"Instructor name : {item.Course.Instructor.FirstName} {item.Course.Instructor.LastName}.");
+                Console.WriteLine();
+                Console.WriteLine("--------------------------------------");
+            }
 
             var a = 0;
         }
-
     }
 
     public static class Common
