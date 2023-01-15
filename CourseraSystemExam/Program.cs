@@ -1,11 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using static CourseraSystemExam.Services;
 
 namespace CourseraSystemExam
 {
@@ -17,8 +12,6 @@ namespace CourseraSystemExam
         static void Main(string[] args)
         {
             Extensions.RegisterServices();
-
-            // TODO:
 
             Console.WriteLine("Please enter the minimum credit for course...    e.g. 30");
             var minCredit = 0;
@@ -40,7 +33,6 @@ namespace CourseraSystemExam
             Console.ReadLine();
         }
 
-
         static async Task GenerateCourseraReport(int minCredit, DateTime startDateCredit, DateTime endDateCredit, string pathToSaveReports)
         {
             //var res = await Services.GetAllStudents<StudentViewModel>();
@@ -53,7 +45,6 @@ namespace CourseraSystemExam
 
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine();
 
             foreach (var item in output)
             {
@@ -61,10 +52,8 @@ namespace CourseraSystemExam
                 Console.WriteLine($"Course name : {item.Course.Name} with {item.Course.Credit} credits completed on {item.CompletionDate?.ToString("d")}");
                 Console.WriteLine($"Instructor name : {item.Course.Instructor.FirstName} {item.Course.Instructor.LastName}.");
                 Console.WriteLine();
-                Console.WriteLine("--------------------------------------");
+                Console.WriteLine("-------------------------------------------");
             }
-
-            var a = 0;
         }
     }
 
@@ -179,11 +168,6 @@ namespace CourseraSystemExam
 
         public StudentViewModel StudentPinNavigation { get; set; }
     }
-
-
-
-
-
 
     //static void GetAppSettingsFile()
     //{
